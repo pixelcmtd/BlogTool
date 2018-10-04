@@ -1,4 +1,4 @@
-Test article
+Test Article
 ------------
 This is a test article used for testing, because testing your
 programs is important. But tests to test tests are also important.
