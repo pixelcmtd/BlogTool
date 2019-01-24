@@ -21,33 +21,29 @@ int main(int argc, char **argv)
 		puts("[formatted text file] [html file]\n");
 		return 1;
 	}
-	char *title = argv[1];
-	char *rtxtf = argv[2];
-	char *ftxtf = argv[3];
-	char *htmlf = argv[4];
-	long rwtxtlen = fsize(rtxtf);
-	char *rwtxt = (char*)malloc(rwtxtlen);
-	FILE *f = fopen(rtxtf, "r");
-	rwtxtlen = fread(rwtxt, 1, rwtxtlen, f);
+	long rtxtl = fsize(argv[2]);
+	char *rtxt = (char*)malloc(rtxtl);
+	FILE *f = fopen(argv[2], "r");
+	rtxtl = fread(rtxt, 1, rtxtl, f);
 	fclose(f);
-	f = fopen(ftxtf, "w");
-	FILE *g = fopen(htmlf, "w");
-	fputs(title, f);
+	f = fopen(argv[3], "w");
+	FILE *g = fopen(argv[4], "w");
+	fputs(argv[1], f);
 	fputc('\n', f);
-	for(int i = 0; i < strlen(title); i++)
+	for(unsigned i = 0; i < strlen(argv[1]); i++)
 		fputc('-', f);
 	fputc('\n', f);
 	fputs("<head><title>", g);
-	fputs(title, g);
+	fputs(argv[1], g);
 	fputs("</title></head><body><h1>", g);
-	fputs(title, g);
+	fputs(argv[1], g);
 	fputs("</h1><p>", g);
 	bool urllabel = false;
 	bool urlurl = false;
 	vector<char> str;
-	for(long i = 0; i < rwtxtlen; i++)
+	for(long i = 0; i < rtxtl; i++)
 	{
-		char c = rwtxt[i];
+		char c = rtxt[i];
 		if(urllabel && c == ']')
 		{
 			urllabel = 0;
@@ -80,13 +76,12 @@ int main(int argc, char **argv)
 			fputc('(', f);
 			fputs("<a href=\"", g);
 		}
-		else if(c == '\r');
 		else if(c == '\n')
 		{
 			fputs("</p><p>", g);
 			fputc(c, f);
 		}
-		else
+		else if(c != '\r')
 		{
 			fputc(c, f);
 			fputc(c, g);
