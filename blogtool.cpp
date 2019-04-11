@@ -6,13 +6,6 @@
 
 using namespace std;
 
-long fsize(char *file)
-{
-	struct stat s;
-	int rc = stat(file, &s);
-	return rc == 0 ? s.st_size : -1;
-}
-
 int main(int argc, char **argv)
 {
 	if(argc < 5)
@@ -21,12 +14,8 @@ int main(int argc, char **argv)
 		puts("[formatted text file] [html file]\n");
 		return 1;
 	}
-	long rtxtl = fsize(argv[2]);
-	char *rtxt = (char*)malloc(rtxtl);
-	FILE *f = fopen(argv[2], "r");
-	rtxtl = fread(rtxt, 1, rtxtl, f);
-	fclose(f);
-	f = fopen(argv[3], "w");
+	FILE *h = fopen(argv[2], "r");
+	FILE *f = fopen(argv[3], "w");
 	FILE *g = fopen(argv[4], "w");
 	fputs(argv[1], f);
 	fputc('\n', f);
@@ -37,18 +26,16 @@ int main(int argc, char **argv)
 	fputs(argv[1], g);
 	fputs("</title></head><body><h1>", g);
 	fputs(argv[1], g);
-	fputs("</h1><p>", g);
+	fputs("</h1>", g);
 	bool urllabel = false;
 	bool urlurl = false;
 	vector<char> str;
-	for(long i = 0; i < rtxtl; i++)
+	int i = 0;
+	while((i = fgetc(h)) != -1)
 	{
-		char c = rtxt[i];
-		if(urllabel && c == ']')
-		{
+		if(urllabel && i == ']')
 			urllabel = 0;
-		}
-		else if(urlurl && c == '}')
+		else if(urlurl && i == '}')
 		{
 			urlurl = 0;
 			fputs("\">", g);
@@ -58,37 +45,36 @@ int main(int argc, char **argv)
 		}
 		else if(urllabel)
 		{
-			str.push_back(c);
-			fputc(c, f);
+			str.push_back(i);
+			fputc(i, f);
 		}
 		else if(urlurl)
 		{
-			fputc(c, f);
-			fputc(c, g);
+			fputc(i, f);
+			fputc(i, g);
 		}
-		else if(c == '[')
-		{
+		else if(i == '[')
 			urllabel = 1;
-		}
-		else if(c == '{')
+		else if(i == '{')
 		{
 			urlurl = 1;
 			fputc('(', f);
 			fputs("<a href=\"", g);
 		}
-		else if(c == '\n')
+		else if(i == '\n')
 		{
-			fputs("</p><p>", g);
-			fputc(c, f);
+			fputs("<br/>", g);
+			fputc(i, f);
 		}
-		else if(c != '\r')
+		else if(i != '\r')
 		{
-			fputc(c, f);
-			fputc(c, g);
+			fputc(i, f);
+			fputc(i, g);
 		}
 	}
 	fclose(f);
-	fputs("</p></body>", g);
+	fputs("</body>", g);
 	fclose(g);
+	fclose(h);
 	return 0;
 }
