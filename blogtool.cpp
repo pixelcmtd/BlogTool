@@ -22,11 +22,11 @@ int main(int argc, char **argv)
 	for(unsigned i = 0; i < strlen(argv[1]); i++)
 		fputc('-', f);
 	fputc('\n', f);
-	fputs("<head><title>", g);
+	fputs("<html>\n\t<head>\n\t\t<title>\n\t\t\t", g);
 	fputs(argv[1], g);
-	fputs("</title></head><body><h1>", g);
+	fputs("\n\t\t</title>\n\t</head>\n\t<body>\n\t\t<h1>\n\t\t\t", g);
 	fputs(argv[1], g);
-	fputs("</h1>", g);
+	fputs("\n\t\t</h1>\n\t\t", g);
 	bool urllabel = false;
 	bool urlurl = false;
 	vector<char> str;
@@ -38,9 +38,9 @@ int main(int argc, char **argv)
 		else if(urlurl && i == '}')
 		{
 			urlurl = 0;
-			fputs("\">", g);
+			fputs("\">\n\t\t\t", g);
 			fputs(&str[0], g);
-			fputs("</a>", g);
+			fputs("\n\t\t</a>\n\t\t", g);
 			fputc(')', f);
 		}
 		else if(urllabel)
@@ -59,11 +59,11 @@ int main(int argc, char **argv)
 		{
 			urlurl = 1;
 			fputc('(', f);
-			fputs("<a href=\"", g);
+			fputs("\n\t\t<a href=\"", g);
 		}
 		else if(i == '\n')
 		{
-			fputs("<br/>", g);
+			fputs("<br/>\n\t\t", g);
 			fputc(i, f);
 		}
 		else if(i != '\r')
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 		}
 	}
 	fclose(f);
-	fputs("</body>", g);
+	fputs("</body>\n</html>", g);
 	fclose(g);
 	fclose(h);
 	return 0;
