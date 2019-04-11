@@ -1,3 +1,0 @@
-#!/bin/sh
-g++ blogtool.cpp -Og -o blogtool.dbg
-./blogtool.dbg "Test Article" testarticle.raw testarticle.txt testarticle.html
