@@ -1,7 +1,9 @@
+Test Article
+------------
 This is a test article used for testing, because testing your
 programs is important. But tests to test tests are also important.
 So I should also create some test-tests. The testing game is really
 like the blocking game, you now need some ad-blocker-blocker-blockers
 and now you need test-tests.
 
-Go to [chrissx.ga](https://chrissx.ga)!
+Go to chrissx.ga(https://chrissx.ga)!
